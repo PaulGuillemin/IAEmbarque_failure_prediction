@@ -3,7 +3,6 @@ import numpy as np
 
 PORT = "COM5"
 
-
 def synchronise_UART(serial_port):
     """
     Synchronizes the UART communication by sending a byte and waiting for a response.
@@ -50,7 +49,7 @@ def read_output_from_STM32(serial_port):
     Returns:
     A list of float values obtained by dividing each byte by 255.
     """
-    output = serial_port.read(10)
+    output = serial_port.read(1)
 
     float_values = [int(out)/255 for out in output]
     return float_values
@@ -81,8 +80,8 @@ def evaluate_model_on_STM32(iterations, serial_port):
 
 
 if __name__ == '__main__':
-    X_test = np.load("./MNIST_xtest_NN_C2_16_10.npy")
-    Y_test = np.load("./MNIST_ytest_NN_C2_16_10.npy")
+    X_test = np.load("ia_machines\X_test.npy")
+    Y_test = np.load("ia_machines\Y_test.npy")
 
     with serial.Serial(PORT, 115200, timeout=1) as ser:
         print("Synchronising...")
@@ -90,4 +89,4 @@ if __name__ == '__main__':
         print("Synchronised")
 
         print("Evaluating model on STM32...")
-        error = evaluate_model_on_STM32(100, ser)
+        error = evaluate_model_on_STM32(300, ser)
